@@ -1,0 +1,18 @@
+server:
+  port: 8081
+
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/banner_service_schema
+    username: root
+    password: root
+  jpa:
+    hibernate:
+      ddl-auto: update
+    generate-ddl: true
+    show-sql: true
+  jooq:
+    sql-dialect: MySqlDialect
+
+values:
+  crud-permission-password: TheMostUnbreakablePasswordInTheWorld
