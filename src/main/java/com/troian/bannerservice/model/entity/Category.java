@@ -6,9 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Getter
@@ -50,12 +48,5 @@ public class Category {
             banners = new ArrayList<>();
         }
         return banners;
-    }
-
-    public void addBanner(Banner banner) {
-        if(banners == null) {
-            banners = new ArrayList<>();
-        }
-        banners.add(banner);
     }
 }

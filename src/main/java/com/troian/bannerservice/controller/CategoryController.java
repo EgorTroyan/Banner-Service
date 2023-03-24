@@ -14,12 +14,6 @@ import java.util.List;
 @RequestMapping("/category")
 public class CategoryController {
 
-    //private final CategoryRepository categoryRepository;
-
-    //    @Autowired
-//    public CategoryController(CategoryRepository categoryRepository) {
-//        this.categoryRepository = categoryRepository;
-//    }
     private final CategoryService categoryService;
 
     public CategoryController(CategoryService categoryService) {

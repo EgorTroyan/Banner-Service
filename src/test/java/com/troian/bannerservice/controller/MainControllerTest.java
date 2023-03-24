@@ -18,7 +18,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @TestPropertySource(locations = "/application.yml")
 @AutoConfigureMockMvc
-//@Sql({"/schemas.sql", "/import-data.sql"})
 class MainControllerTest {
     @Autowired
     private MockMvc mockMvc;
@@ -73,7 +72,7 @@ class MainControllerTest {
 
     @Test
     @Sql({"/schemas.sql", "/import-data.sql"})
-    void getBannerManyTimesAndCheckBestPricesAndDayDuplicates() throws Exception {
+    void getBannerManyTimesWithOneIpAndCheckBestPricesAndDayDuplicates() throws Exception {
         MvcResult result1 = mockMvc.perform(get("/bid?cat=cat1")
                         .header("User-Agent", "Test Agent"))
                 .andExpect(status().isOk())
@@ -95,5 +94,24 @@ class MainControllerTest {
         mockMvc.perform(get("/bid?cat=cat1")
                 .header("User-Agent", "Test Agent"))
                 .andExpect(status().is(204));
+    }
+
+    @Test
+    @Sql({"/schemas.sql", "/import-data.sql"})
+    void getBannerTwoTimesWithDifferentIpAndCheckBestPrices() throws Exception {
+        MvcResult result1 = mockMvc.perform(get("/bid?cat=cat1")
+                        .with(request->{request.setRemoteHost("192.168.0.2");return request;})
+                        .header("User-Agent", "Test Agent"))
+                .andExpect(status().isOk())
+                .andReturn();
+        String text1 = result1.getResponse().getContentAsString();
+        Assert.isTrue(text1.equals("third banner"), "");
+        MvcResult result2 = mockMvc.perform(get("/bid?cat=cat1")
+                        .with(request->{request.setRemoteHost("192.168.0.1");return request;})
+                        .header("User-Agent", "Test Agent"))
+                .andExpect(status().isOk())
+                .andReturn();
+        String text2 = result2.getResponse().getContentAsString();
+        Assert.isTrue(text2.equals("third banner"), "");
     }
 }

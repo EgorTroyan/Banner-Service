@@ -49,7 +49,6 @@ public class LoggingAspectImpl {
             recordRepository.save(record);
             return banner;
         } catch (NoBannerException ex) {
-            log.warn("Catch NoBanner");
             record.setNoContentReason(ex.getLocalizedMessage());
             recordRepository.save(record);
             throw new NoBannerException("");

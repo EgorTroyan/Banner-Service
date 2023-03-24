@@ -37,7 +37,7 @@ public class BannerService {
                 .filter(Category::isActive)
                 .flatMap(category -> category.getBanners().stream())
                 .filter(banner -> {
-                    Record record = recordRepository.getTop1ByBannerIdOrderByDateDesc(banner.getId());
+                    Record record = recordRepository.getTop1ByBannerIdAndIpOrderByDateDesc(banner.getId(), request.getRemoteHost());
                     return record == null || !record.getDate().toLocalDate().equals(LocalDate.now());
                 })
                 .forEach(banners::add);
