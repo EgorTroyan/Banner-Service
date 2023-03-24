@@ -50,4 +50,14 @@ public class Record {
             categoryIds = new HashSet<>();
         return categoryIds;
     }
+
+    public Record(String ip, String agent, LocalDateTime date, long bannerId, Set<Long> categoryIds, float price, String noContentReason) {
+        this.ip = ip;
+        this.agent = agent;
+        this.date = date;
+        this.bannerId = bannerId;
+        this.categoryIds = categoryIds;
+        this.price = price;
+        this.noContentReason = noContentReason;
+    }
 }

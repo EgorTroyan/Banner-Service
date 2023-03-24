@@ -1,0 +1,21 @@
+server:
+  port: 8081
+
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/banner_service_test
+    username: root
+    password: root
+  jpa:
+    hibernate:
+      ddl-auto: none
+    generate-ddl: true
+  jooq:
+    sql-dialect: MySqlDialect
+  sql:
+    init:
+      mode: never
+
+
+values:
+  crud-permission-password: TestPassword

@@ -5,8 +5,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -28,7 +28,6 @@ public class Banner implements Comparable<Banner>{
     @NotNull
     private float price;
 
-    //@NotBlank
     @ManyToMany(cascade = {CascadeType.PERSIST,
             CascadeType.REFRESH},
             fetch = FetchType.LAZY)
@@ -36,8 +35,7 @@ public class Banner implements Comparable<Banner>{
             name = "category_banner",
             joinColumns = @JoinColumn(name = "banner_id"),
             inverseJoinColumns = @JoinColumn(name = "category_id"))
-    //@ToString.Exclude
-    private Set<Category> categories;
+    private List<Category> categories;
     private boolean isActive;
 
     public Banner(String name, String text, float price, boolean isActive) {
@@ -49,18 +47,11 @@ public class Banner implements Comparable<Banner>{
 
     public void addCategoryToBanner(Category category) {
         if(categories == null) {
-            categories = new HashSet<>();
+            categories = new ArrayList<>();
         }
         categories.add(category);
         category.getBanners().add(this);
     }
-
-//    public void removeCategoryFromBanner(long categoryId) {
-//        Category category = categories.stream().filter(cat -> cat.getId() == categoryId).findAny().orElse(null);
-//        if(category != null) {
-//            categories.remove(category);
-//        }
-//    }
 
     @Override
     public int compareTo(Banner o) {

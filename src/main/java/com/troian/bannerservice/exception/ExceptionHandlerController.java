@@ -30,8 +30,10 @@ public class ExceptionHandlerController {
 
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<ErrorMessage> duplicateExceptionHandler(DataIntegrityViolationException exception) {
+        String nameId =
+                getNameIdFromDataIntegrityViolationException(exception.getCause().getCause().getLocalizedMessage());
         ErrorMessage errorMessage = new ErrorMessage();
-        errorMessage.setMessage("Duplicate entry");
+        errorMessage.setMessage(String.format("%s is already exist", nameId));
         errorMessage.setCode(400);
         return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
     }
@@ -59,7 +61,15 @@ public class ExceptionHandlerController {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorMessage> allOtherExceptionHandler(Exception exception) {
-        log.info("Catch other exception");
+        log.info("Catch other exception || " + exception.toString());
         return new ResponseEntity<>(new ErrorMessage(exception, 400), HttpStatus.BAD_REQUEST);
+    }
+
+    private String getNameIdFromDataIntegrityViolationException(String message) {
+        int startIndex = message.indexOf("'");
+        int endIndex = message.indexOf("'", startIndex + 1);
+        if(startIndex < 0 || endIndex < 0)
+            return "";
+        return message.substring(startIndex, endIndex + 1);
     }
 }

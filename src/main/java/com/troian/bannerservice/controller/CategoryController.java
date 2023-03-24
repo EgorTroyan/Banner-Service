@@ -1,53 +1,50 @@
 package com.troian.bannerservice.controller;
 
 import com.troian.bannerservice.exception.IncorrectCategoryException;
-import com.troian.bannerservice.model.entity.Banner;
 import com.troian.bannerservice.model.entity.Category;
-import com.troian.bannerservice.model.repo.CategoryRepository;
+import com.troian.bannerservice.service.CategoryService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.List;
 
 @Slf4j
 @RestController
 @RequestMapping("/category")
 public class CategoryController {
 
-    private final CategoryRepository categoryRepository;
+    //private final CategoryRepository categoryRepository;
 
-    @Autowired
-    public CategoryController(CategoryRepository categoryRepository) {
-        this.categoryRepository = categoryRepository;
+    //    @Autowired
+//    public CategoryController(CategoryRepository categoryRepository) {
+//        this.categoryRepository = categoryRepository;
+//    }
+    private final CategoryService categoryService;
+
+    public CategoryController(CategoryService categoryService) {
+        this.categoryService = categoryService;
     }
 
     @PostMapping
     public Category addCategory(@Valid @RequestBody Category category) {
-        category.setActive(true);
-            categoryRepository.save(category);
-        return category;
+        return categoryService.addNewCategory(category);
     }
 
     @PutMapping("/{currentCategory}")
     public Category editCategory(@PathVariable Category currentCategory,
                                  @Valid @RequestBody Category updatedCategory) {
-        currentCategory.setName(updatedCategory.getName());
-        currentCategory.setNameId(updatedCategory.getNameId());
-        categoryRepository.save(currentCategory);
-        return currentCategory;
+        return categoryService.editCategory(currentCategory, updatedCategory);
     }
 
     @GetMapping
-    public Set<Category> getAllCategory() {
-        return categoryRepository.findAllByIsActiveIsTrue();
+    public List<Category> getAllCategory() {
+        return categoryService.getAllActiveCategory();
     }
 
     @GetMapping("/filter/{filter}")
-    public Set<Category> getFilteredCategory(@PathVariable String filter) {
-        return categoryRepository.getCategoriesByNameContainsIgnoreCaseAndIsActiveIsTrue(filter);
+    public List<Category> getFilteredCategory(@PathVariable String filter) {
+        return categoryService.getAllFilteredCategory(filter);
     }
 
     @GetMapping("/{category}")
@@ -57,11 +54,6 @@ public class CategoryController {
 
     @DeleteMapping("/{category}")
     public Category deleteCategory(@PathVariable Category category) throws IncorrectCategoryException {
-        if(category.getBanners().stream().filter(Banner::isActive).collect(Collectors.toSet()).size() > 0)
-            throw new IncorrectCategoryException(String.format("Category %s couldn't be deleted. Exist linked banners", category.getName()));
-
-        category.setActive(false);
-        categoryRepository.save(category);
-        return category;
+        return categoryService.diactivateCategory(category);
     }
 }

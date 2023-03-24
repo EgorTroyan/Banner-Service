@@ -12,7 +12,7 @@ public class ErrorMessage {
     private String message;
 
     public ErrorMessage(Throwable exception, int code) {
-        message = exception.toString() + " || " + exception.getLocalizedMessage();
+        message = exception.getLocalizedMessage();
         this.code = code;
     }
 }

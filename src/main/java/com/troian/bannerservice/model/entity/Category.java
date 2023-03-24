@@ -5,7 +5,9 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -33,7 +35,7 @@ public class Category {
     @ManyToMany(mappedBy = "categories", fetch = FetchType.LAZY)
     @ToString.Exclude
     @JsonIgnore
-    private Set<Banner> banners;
+    private List<Banner> banners;
 
     private boolean isActive;
 
@@ -43,16 +45,16 @@ public class Category {
         this.isActive = isActive;
     }
 
-    public Set<Banner> getBanners() {
+    public List<Banner> getBanners() {
         if(banners == null) {
-            banners = new HashSet<>();
+            banners = new ArrayList<>();
         }
         return banners;
     }
 
     public void addBanner(Banner banner) {
         if(banners == null) {
-            banners = new HashSet<>();
+            banners = new ArrayList<>();
         }
         banners.add(banner);
     }
