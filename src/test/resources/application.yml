@@ -10,6 +10,7 @@ spring:
     hibernate:
       ddl-auto: none
     generate-ddl: true
+    show-sql: true
   jooq:
     sql-dialect: MySqlDialect
   sql:

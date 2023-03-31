@@ -9,5 +9,4 @@ public class BannerServiceApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(BannerServiceApplication.class, args);
 	}
-
 }
